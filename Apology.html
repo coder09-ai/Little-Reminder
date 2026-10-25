@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#fff5f7">
+<title>A Little Reminder for You</title>
+<style>
+  :root {
+    --rose: #d86d8d;
+    --rose-dark: #a94768;
+    --pink: #ffe4ec;
+    --cream: #fffaf5;
+    --ink: #503a43;
+    --muted: #856d76;
+    --line: #f1d4de;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0; min-height: 100vh; color: var(--ink);
+    font-family: ui-rounded, "Trebuchet MS", system-ui, -apple-system, sans-serif;
+    background:
+      radial-gradient(circle at 12% 12%, rgba(255,220,232,.75), transparent 26rem),
+      radial-gradient(circle at 88% 35%, rgba(255,236,213,.65), transparent 25rem),
+      var(--cream);
+    overflow-x: hidden;
+  }
+  .wrap { width: min(760px, calc(100% - 32px)); margin: 0 auto; }
+  header { padding: 24px 0 10px; display:flex; justify-content:space-between; align-items:center; gap:12px; }
+  .brand { font-size:.9rem; letter-spacing:.06em; color:var(--rose-dark); font-weight:800; }
+  .tiny-heart { color:var(--rose); font-size:1.2rem; }
+  .hero { text-align:center; padding: 54px 0 34px; position:relative; }
+  .eyebrow { text-transform:uppercase; letter-spacing:.18em; color:var(--rose-dark); font-size:.72rem; font-weight:800; }
+  h1 { font-family: Georgia, "Times New Roman", serif; font-weight:500; font-size:clamp(2.4rem, 8vw, 4.6rem); line-height:1.04; margin:16px 0; letter-spacing:-.045em; }
+  h1 em { color:var(--rose); font-weight:400; }
+  .intro { max-width: 490px; margin:0 auto; line-height:1.8; color:var(--muted); font-size:1.02rem; }
+  .envelope-area { display:flex; justify-content:center; padding:24px 0 12px; }
+  .envelope-button { border:0; background:transparent; cursor:pointer; color:inherit; padding:8px; }
+  .envelope { width:min(270px, 70vw); height:174px; position:relative; filter:drop-shadow(0 15px 20px rgba(174,80,111,.14)); transition:transform .25s ease; }
+  .envelope-button:hover .envelope { transform:translateY(-5px) rotate(-1deg); }
+  .env-back { position:absolute; inset:0; border-radius:12px; background:#f4b6c9; }
+  .env-paper { position:absolute; left:9%; top:9%; width:82%; height:76%; background:#fffdfb; border-radius:7px; display:flex; flex-direction:column; justify-content:center; align-items:center; gap:8px; transition:transform .6s cubic-bezier(.2,.8,.2,1); }
+  .env-paper span:first-child { font-family:Georgia,serif; font-size:1.2rem; color:var(--rose-dark); }
+  .env-paper span:last-child { font-size:.75rem; color:var(--muted); }
+  .env-front { position:absolute; inset:0; background:#f7c9d7; clip-path:polygon(0 100%, 0 0, 50% 57%, 100% 0, 100% 100%); border-radius:0 0 12px 12px; }
+  .env-flap { position:absolute; inset:0; background:#fbe0e8; clip-path:polygon(0 0,100% 0,50% 58%); transform-origin:top; transition:transform .45s ease; border-radius:12px 12px 0 0; }
+  .seal { position:absolute; left:50%; top:55%; transform:translate(-50%,-50%); width:38px; height:38px; border-radius:50%; background:var(--rose); color:white; display:grid; place-items:center; font-size:1.15rem; box-shadow:0 3px 9px #c86c8a55; }
+  .envelope-button.opened .env-flap { transform:rotateX(180deg); }
+  .envelope-button.opened .env-paper { transform:translateY(-42px); }
+  .tap-hint { color:var(--rose-dark); font-size:.85rem; margin:4px 0 0; }
+  .letter { display:none; background:rgba(255,255,255,.82); border:1px solid var(--line); border-radius:22px; padding:clamp(22px,5vw,42px); margin:28px auto 24px; box-shadow:0 16px 45px rgba(164,86,111,.08); animation:appear .55s ease both; }
+  .letter.visible { display:block; }
+  .letter h2, .section-title { font-family:Georgia,serif; font-weight:500; letter-spacing:-.025em; }
+  .letter h2 { font-size:2rem; margin:0 0 18px; }
+  .letter p { line-height:1.9; color:#69525b; }
+  .signature { margin-top:24px; color:var(--rose-dark); font-family:Georgia,serif; font-size:1.25rem; font-style:italic; }
+  .section { padding:38px 0; }
+  .section-title { text-align:center; font-size:clamp(1.8rem,5vw,2.5rem); margin:0 0 12px; }
+  .section-sub { text-align:center; max-width:500px; margin:0 auto 24px; line-height:1.75; color:var(--muted); }
+  .cards { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
+  .card { text-align:left; background:rgba(255,255,255,.72); border:1px solid var(--line); border-radius:18px; padding:19px 16px; min-height:155px; }
+  .card .emoji { font-size:1.55rem; display:block; margin-bottom:12px; }
+  .card h3 { font-size:.98rem; margin:0 0 7px; color:var(--rose-dark); }
+  .card p { margin:0; font-size:.88rem; line-height:1.65; color:var(--muted); }
+  .promise { background:#fff0f4; border:1px solid #f5d5df; border-radius:22px; text-align:center; padding:clamp(24px,5vw,40px); margin:10px 0 36px; }
+  .promise blockquote { font-family:Georgia,serif; font-size:clamp(1.35rem,4vw,1.85rem); line-height:1.5; margin:12px auto; max-width:560px; }
+  .promise p { line-height:1.75; color:var(--muted); max-width:520px; margin:0 auto; }
+  .small-note { font-size:.8rem; color:#967d86; text-align:center; line-height:1.7; padding:0 0 30px; }
+  footer { text-align:center; border-top:1px solid var(--line); padding:22px 0 32px; color:#9b828b; font-size:.8rem; }
+  .heart-float { position:fixed; bottom:-30px; z-index:-1; opacity:0; color:#e7a1b6; animation:floatUp 7s linear forwards; pointer-events:none; }
+  @keyframes appear { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+  @keyframes floatUp { 0% { opacity:0; transform:translateY(0) rotate(0); } 15% { opacity:.65; } 85% { opacity:.5; } 100% { opacity:0; transform:translateY(-110vh) rotate(28deg); } }
+  @media (max-width:600px) {
+    .hero { padding-top:38px; }
+    .cards { grid-template-columns:1fr; }
+    .card { min-height:0; display:grid; grid-template-columns:34px 1fr; column-gap:10px; }
+    .card .emoji { grid-row:span 2; }
+    .card h3 { align-self:end; }
+    .card p { grid-column:2; }
+    header { padding-top:18px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration:.01ms !important; animation-iteration-count:1 !important; scroll-behavior:auto !important; transition-duration:.01ms !important; }
+  }
+
+  .password-gate {
+    position:fixed; inset:0; z-index:9999; display:grid; place-items:center;
+    padding:24px; background:
+      radial-gradient(circle at 12% 12%, rgba(255,220,232,.8), transparent 26rem),
+      radial-gradient(circle at 88% 35%, rgba(255,236,213,.7), transparent 25rem),
+      var(--cream);
+  }
+  .password-card {
+    width:min(420px,100%); padding:clamp(24px,6vw,40px); text-align:center;
+    background:rgba(255,255,255,.86); border:1px solid var(--line);
+    border-radius:24px; box-shadow:0 18px 55px rgba(164,86,111,.12);
+  }
+  .password-card .lock { font-size:2rem; margin-bottom:10px; }
+  .password-card h1 { font-size:clamp(2rem,7vw,3rem); margin:10px 0; }
+  .password-card p { color:var(--muted); line-height:1.7; }
+  .password-form { display:flex; flex-direction:column; gap:12px; margin-top:22px; }
+  .password-form input {
+    width:100%; padding:14px 16px; border:1px solid var(--line); border-radius:12px;
+    font:inherit; color:var(--ink); background:#fff; outline:none;
+  }
+  .password-form input:focus { border-color:var(--rose); box-shadow:0 0 0 3px #d86d8d22; }
+  .password-form button {
+    padding:14px 18px; border:0; border-radius:12px; background:var(--rose);
+    color:#fff; font:inherit; font-weight:800; cursor:pointer;
+  }
+  .password-form button:hover { background:var(--rose-dark); }
+  .password-error { min-height:1.4em; color:#a12e4f !important; font-size:.9rem; margin:0; }
+  body.locked { overflow:hidden; }
+
+</style>
+</head>
+<body class="locked">
+
+  <section class="password-gate" id="passwordGate" aria-labelledby="gateTitle">
+    <div class="password-card">
+      <div class="lock" aria-hidden="true">♡</div>
+      <div class="eyebrow">a little space, just for you</div>
+      <h1 id="gateTitle">A Little Reminder</h1>
+      <p>Enter the password to open your note. ♡</p>
+      <form class="password-form" id="passwordForm">
+        <input id="sitePassword" type="password" placeholder="Enter password"
+               autocomplete="current-password" aria-label="Password" required>
+        <button type="submit">Open the page ♡</button>
+        <p class="password-error" id="passwordError" role="alert" aria-live="polite"></p>
+      </form>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <header>
+      <div class="brand">A LITTLE REMINDER</div>
+      <div class="tiny-heart" aria-hidden="true">♡</div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="eyebrow">made with care, and a little more understanding</div>
+        <h1>For someone<br><em>wonderfully capable.</em></h1>
+        <p class="intro">A tiny corner of the internet, just to say something I should have said better in person.</p>
+        <div class="envelope-area">
+          <button class="envelope-button" id="openLetter" aria-expanded="false" aria-controls="letter">
+            <div class="envelope" aria-hidden="true">
+              <div class="env-back"></div>
+              <div class="env-paper"><span>A note for you</span><span>from someone learning</span></div>
+              <div class="env-front"></div>
+              <div class="env-flap"></div>
+              <div class="seal">♡</div>
+            </div>
+            <div class="tap-hint">tap the envelope to open your letter ↓</div>
+          </button>
+        </div>
+      </section>
+
+      <section class="letter" id="letter" aria-live="polite">
+        <h2>Hollaa Madamm Jii♡</h2>
+        <p>I want to say I'm sorry. I care about you so much that sometimes mai bhul jata hu that you are mature enough and you do have common sense</p>
+        <p>I can see how that might feel less like care and more like I don't trust your judgment. You deserve to feel respected and understood by me, not kinda always advised. I'm sorry for making you feel otherwise.</p>
+        <p>I don't want to care less. I want to care better: to ask instead of assume, listen instead of overthink, and give advice when you want it instead of acting like you can't figure things out yourself, no matter how much care i have towards you, i shan't just kinda always start with giving you guidelines, although i am sorry for my actions, i need you to believe me when i say, i do care for you and it's for your own good, your bestest future.
+        <p>You don't have to make me feel better about this or forgive me straight away. I just wanted to own my part, and then show you through my actions that I mean it. I also assure you , i won't again everytime give the advice, instead i will let you decide what's best for you, and will stand with you to face if any problem arise.</p>
+        <div class="signature">With khubb saara love,
+Your bhakt ♡</div>
+      </section>
+
+      <section class="section">
+        <h2 class="section-title">What I want to do better</h2>
+        <p class="section-sub">Not grand promises. Just little changes that make my care feel like support.</p>
+        <div class="cards">
+          <article class="card">
+            <span class="emoji" aria-hidden="true">💕</span>
+            <h3>Ask, don't assume</h3>
+            <p>“Do you want help, advice, or just someone to listen?”</p>
+          </article>
+          <article class="card">
+            <span class="emoji" aria-hidden="true">🫶</span>
+            <h3>Trust your judgment</h3>
+            <p>Remember that you are capable, thoughtful, and allowed to do things your own way.</p>
+          </article>
+          <article class="card">
+            <span class="emoji" aria-hidden="true">🩷</span>
+            <h3>Respect your space</h3>
+            <p>Care without hovering, and listen when you tell me what you need.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="promise">
+        <div class="eyebrow">a promise I'm working on</div>
+        <blockquote>“I want to stand beside you, not stand over you.”</blockquote>
+        <p>You don't need me to solve everything. I want to be someone who believes in you, respects your choices, and is there when you want support.</p>
+      </section>
+
+      <p class="small-note">No pressure to reply right away. This isn't a request for instant forgiveness — just an apology, with love and respect. ♡</p>
+    </main>
+
+    <footer>made thoughtfully, not perfectly · ♡</footer>
+  </div>
+
+<script>
+
+  // Change this to the password you want to use.
+  // Note: a password stored in front-end HTML/JavaScript is not secure against someone inspecting the source.
+  const ACCESS_PASSWORD = "17.04.2026";
+  const passwordGate = document.getElementById('passwordGate');
+  const passwordForm = document.getElementById('passwordForm');
+  const passwordInput = document.getElementById('sitePassword');
+  const passwordError = document.getElementById('passwordError');
+
+  passwordForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+    if (passwordInput.value === ACCESS_PASSWORD) {
+      passwordGate.remove();
+      document.body.classList.remove('locked');
+    } else {
+      passwordError.textContent = 'That password isn’t correct. Please try again.';
+      passwordInput.value = '';
+      passwordInput.focus();
+    }
+  });
+
+  const openButton = document.getElementById('openLetter');
+  const letter = document.getElementById('letter');
+
+  openButton.addEventListener('click', () => {
+    const isOpen = letter.classList.toggle('visible');
+    openButton.classList.toggle('opened', isOpen);
+    openButton.setAttribute('aria-expanded', String(isOpen));
+    openButton.querySelector('.tap-hint').textContent = isOpen
+      ? 'your letter is open ♡'
+      : 'tap the envelope to open your letter ↓';
+    if (isOpen) {
+      setTimeout(() => letter.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+      makeHearts();
+    }
+  });
+
+  function makeHearts() {
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reducedMotion) return;
+    for (let i = 0; i < 9; i++) {
+      const heart = document.createElement('span');
+      heart.className = 'heart-float';
+      heart.textContent = ['♡', '♥', '✧'][i % 3];
+      heart.style.left = (8 + Math.random() * 84) + 'vw';
+      heart.style.animationDelay = (Math.random() * 1.8) + 's';
+      heart.style.fontSize = (14 + Math.random() * 17) + 'px';
+      document.body.appendChild(heart);
+      setTimeout(() => heart.remove(), 9000);
+    }
+  }
+
+  // Quick personalization: add ?to=HerName&from=YourName to the website URL.
+  const params = new URLSearchParams(window.location.search);
+  const safeText = (value, fallback) => {
+    const cleaned = (value || '').trim().slice(0, 40);
+    return cleaned || fallback;
+  };
+  const recipient = safeText(params.get('to'), '');
+  const sender = safeText(params.get('from'), '[your name]');
+  if (recipient) {
+    document.querySelector('h1').innerHTML = 'For <em>' + escapeHTML(recipient) + '</em>,<br>with love.';
+    document.querySelector('.intro').textContent = 'A tiny corner of the internet, just to say something I should have said better in person.';
+  }
+
+  function escapeHTML(value) {
+    return value.replace(/[&<>"']/g, char => ({
+      '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'
+    }[char]));
+  }
+</script>
+</body>
+</html>
